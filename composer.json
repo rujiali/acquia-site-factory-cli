@@ -1,6 +1,6 @@
 {
-    "name": "rujiali/SiteFactoryPuller",
-    "description": "The Laravel Framework.",
+    "name": "rujiali/site-factory-puller",
+    "description": "An Acquia site factory RESTFUL wrapper using the Laravel framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",
