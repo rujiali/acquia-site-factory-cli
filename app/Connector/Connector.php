@@ -138,11 +138,11 @@ class Connector {
   }
 
   /**
-   * Get backup URL for specific backup.
+   * Get backup URL for latest backup.
    *
    * @return string
    */
-  public function getBackupURL() {
+  public function getLatestBackupURL() {
     if ($this->ping() == 'pong') {
       // Find out the latest backup ID.
       $backups = $this->listBackups();

@@ -21,12 +21,15 @@ class Ping extends Command
      */
     protected $description = 'Ping site factory service';
 
-    protected $connector;
-    
     /**
-     * Create a new command instance.
+     * @var \App\Connector\Connector
+     */
+    protected $connector;
+
+    /**
+     * Ping constructor.
      *
-     * @return void
+     * @param \App\Connector\Connector $connector
      */
     public function __construct(Connector $connector)
     {

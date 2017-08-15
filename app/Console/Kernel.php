@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
         Commands\Ping::class,
         Commands\ListBackups::class,
         Commands\CreateBackup::class,
-        Commands\getBackupURL::class
+        Commands\GetLatestBackupURL::class
     ];
 
     /**

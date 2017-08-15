@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Connector\Connector;
 
-class getBackupURL extends Command
+class GetLatestBackupURL extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:getBackupURL';
+    protected $signature = 'command:getLatestBackupURL';
 
     /**
      * The console command description.
@@ -21,12 +21,15 @@ class getBackupURL extends Command
      */
     protected $description = 'Command to get the temporary backup url.';
 
+    /**
+     * @var \App\Connector\Connector
+     */
     protected $connector;
 
     /**
-     * Create a new command instance.
+     * GetLatestBackupURL constructor.
      *
-     * @return void
+     * @param \App\Connector\Connector $connector
      */
     public function __construct(Connector $connector)
     {
@@ -41,7 +44,7 @@ class getBackupURL extends Command
      */
     public function handle()
     {
-        $url = $this->connector->getBackupURL();
+        $url = $this->connector->getLatestBackupURL();
         $this->info($url);
     }
 }

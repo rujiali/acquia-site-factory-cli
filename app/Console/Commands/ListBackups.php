@@ -21,12 +21,15 @@ class ListBackups extends Command
      */
     protected $description = 'Command to list all the backups';
 
-    protected $connector;
-    
     /**
-     * Create a new command instance.
+     * @var \App\Connector\Connector
+     */
+    protected $connector;
+
+    /**
+     * ListBackups constructor.
      *
-     * @return void
+     * @param \App\Connector\Connector $connector
      */
     public function __construct(Connector $connector)
     {

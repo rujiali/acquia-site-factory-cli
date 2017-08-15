@@ -21,12 +21,15 @@ class CreateBackup extends Command
      */
     protected $description = 'Command to create backup for specific site in site factory';
 
+    /**
+     * @var \App\Connector\Connector
+     */
     protected $connector;
 
     /**
-     * Create a new command instance.
+     * CreateBackup constructor.
      *
-     * @return void
+     * @param \App\Connector\Connector $connector
      */
     public function __construct(Connector $connector)
     {
