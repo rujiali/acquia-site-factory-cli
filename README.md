@@ -1,10 +1,10 @@
-#Acquia Site Factory Cli
+# Acquia Site Factory Cli
 
-##Installation
+## Installation
 
 Run ```composer install```
 
-##Configuration
+## Configuration
 
 Put your 
 1. Site factory username
@@ -13,13 +13,13 @@ Put your
 4. The site ID (You can find in your site factory dashboard)
 in ```sitefactory.yml``` file
 
-##Usage
+## Usage
 
-###Ping site factory
+### Ping site factory
 ```./bin/console app:ping```
-###List all backups
+### List all backups
 ```./bin/console app:listBackups```
-###Create Backup
+### Create Backup
 ```./bin/console app:createBackup```
-###Show latest backup URL
+### Show latest backup URL
 ```./bin/console app:getLatestBackupURL```
