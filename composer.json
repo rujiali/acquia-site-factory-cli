@@ -16,7 +16,7 @@
         "symfony/console": "^3.3",
         "symfony/yaml": "^3.3"
     },
-    "bin": ["bin/console"],
+    "bin": ["bin/AcquiaSiteFactoryCli"],
     "autoload": {
         "psr-4": {
             "AppBundle\\": "src/AppBundle"
