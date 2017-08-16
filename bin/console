@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+
+<?php
+require __DIR__ . '/../vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use AppBundle\Commands\PingCommand;
+use AppBundle\Commands\CreateBackupCommand;
+use AppBundle\Commands\GetLatestBackupURLCommand;
+use AppBundle\Commands\ListBackupsCommand;
+use AppBundle\Connector\Connector;
+
+$application = new Application();
+
+$connector = new Connector();
+
+$application->add(New PingCommand($connector));
+$application->add(New CreateBackupCommand($connector));
+$application->add(New ListBackupsCommand($connector));
+$application->add(New GetLatestBackupURLCommand($connector));
+
+$application->run();
