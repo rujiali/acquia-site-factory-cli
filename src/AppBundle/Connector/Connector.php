@@ -13,7 +13,7 @@ use Symfony\Component\Yaml\Parser;
 class Connector {
 
   /**
-   * @var string 
+   * @var string
    *   username in site factory.
    */
   protected $username;
@@ -71,7 +71,7 @@ class Connector {
 
   /**
    * Ping site factory.
-   * 
+   *
    * @return string
    */
   public function ping() {
@@ -100,15 +100,16 @@ class Connector {
   public function listBackups() {
 
     if ($this->ping() == 'pong') {
-      $result = $this->client->get($this->url . '/api/v1/sites/' . $this->siteId . '/backups' , [
-        'auth' => [
-          $this->username,
-          $this->password
-        ],
-      ]);
+      $result = $this->client->get($this->url . '/api/v1/sites/' . $this->siteId . '/backups',
+        [
+          'auth' => [
+            $this->username,
+            $this->password
+          ],
+        ]);
 
       $status = $result->getStatusCode();
-      
+
       if ($status != 404) {
         $bodyText = json_decode($result->getBody());
 
@@ -126,22 +127,23 @@ class Connector {
 
   /**
    * Create backup for specific site in site factory.
-   * 
+   *
    * @param $label
    *   Backup label.
-   * 
+   *
    * @return integer
    *   Task ID.
    */
   public function createBackup($label) {
     if ($this->ping() == 'pong') {
-      $result = $this->client->post($this->url . '/api/v1/sites/' . $this->siteId . '/backup' , [
-        'auth' => [
-          $this->username,
-          $this->password
-        ],
-        'json' => ['label' => $label],
-      ]);
+      $result = $this->client->post($this->url . '/api/v1/sites/' . $this->siteId . '/backup',
+        [
+          'auth' => [
+            $this->username,
+            $this->password
+          ],
+          'json' => ['label' => $label],
+        ]);
 
       $status = $result->getStatusCode();
 
@@ -170,12 +172,13 @@ class Connector {
       $backups = $this->listBackups();
       if (is_array($backups) && !empty($backups)) {
         $backup_id = $backups[0]->id;
-        $result = $this->client->get($this->url . '/api/v1/sites/' . $this->siteId . '/backups/' . $backup_id . '/url', [
-          'auth' => [
-            $this->username,
-            $this->password
-          ],
-        ]);
+        $result = $this->client->get($this->url . '/api/v1/sites/' . $this->siteId . '/backups/' . $backup_id . '/url',
+          [
+            'auth' => [
+              $this->username,
+              $this->password
+            ],
+          ]);
 
         $status = $result->getStatusCode();
 
@@ -196,7 +199,7 @@ class Connector {
     else {
       return 'Site factory is not connected.';
     }
-    
+
   }
 
 }
