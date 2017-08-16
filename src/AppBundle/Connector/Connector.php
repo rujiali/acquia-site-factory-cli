@@ -68,16 +68,21 @@ class Connector {
    * @return string
    */
   public function ping() {
-    $result = $this->client->get($this->url . '/api/v1/ping', [
-      'auth' => [
-        $this->username,
-        $this->password
-      ]
-    ]);
+    if ($this->url && $this->username && $this->password) {
+      $result = $this->client->get($this->url . '/api/v1/ping', [
+        'auth' => [
+          $this->username,
+          $this->password
+        ]
+      ]);
 
-    $bodyText = json_decode($result->getBody());
+      $bodyText = json_decode($result->getBody());
 
-    return $bodyText->message;
+      return $bodyText->message;
+    }
+    else {
+      return 'Can not find details in sitefactory.yml file.';
+    }
   }
 
   /**
