@@ -49,13 +49,20 @@ class Connector {
   protected $config;
 
   /**
+   * @var string.
+   *   Path to root.
+   */
+  protected $root;
+
+  /**
    * Connector constructor.
    */
-  public function __construct() {
+  public function __construct($root) {
     $this->client = new Client();
     $parser = new Parser();
+    $this->root = $root;
 
-    $this->config = $parser->parse(file_get_contents(__DIR__ . '/../../../sitefactory.yml'));
+    $this->config = $parser->parse(file_get_contents($root . 'sitefactory.yml'));
     $this->username = $this->config['username'];
     $this->password = $this->config['apikey'];
     $this->url = $this->config['url'];
