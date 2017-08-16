@@ -1,7 +1,7 @@
 {
     "name": "rujiali/acquia-site-factory-cli",
-    "description": "An Acquia site factory RESTFUL wrapper using the Laravel framework.",
-    "keywords": ["Acquia site factory", "RESTFUL API"],
+    "description": "An Acquia site factory command line tool.",
+    "keywords": ["Acquia site factory", "RESTFUL API", "Command line"],
     "license": "MIT",
     "authors": [
         {
