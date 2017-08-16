@@ -16,10 +16,10 @@ in ```sitefactory.yml``` file
 ## Usage
 
 ### Ping site factory
-```./bin/console app:ping```
+```./bin/AcquiaSiteFactoryCli app:ping```
 ### List all backups
-```./bin/console app:listBackups```
+```./bin/AcquiaSiteFactoryCli app:listBackups```
 ### Create Backup
-```./bin/console app:createBackup```
+```./bin/AcquiaSiteFactoryCli app:createBackup```
 ### Show latest backup URL
-```./bin/console app:getLatestBackupURL```
+```./bin/AcquiaSiteFactoryCli app:getLatestBackupURL```
