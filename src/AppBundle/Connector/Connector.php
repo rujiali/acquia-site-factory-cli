@@ -101,29 +101,24 @@ class Connector {
    */
   public function listBackups() {
 
-    if ($this->ping() == 'pong') {
-      try {
-        $result = $this->client->get($this->url . '/api/v1/sites/' . $this->siteId . '/backups',
-          [
-            'auth' => [
-              $this->username,
-              $this->password
-            ],
-          ]);
-        $bodyText = json_decode($result->getBody());
+    try {
+      $result = $this->client->get($this->url . '/api/v1/sites/' . $this->siteId . '/backups',
+        [
+          'auth' => [
+            $this->username,
+            $this->password
+          ],
+        ]);
+      $bodyText = json_decode($result->getBody());
 
-        return $bodyText->backups;
-      } catch (ClientException $e) {
-        if ($e->hasResponse()) {
-          return json_decode($e->getResponse()->getBody())->message;
-        }
-        else {
-          return 'Cannot find backup for this site.';
-        }
+      return $bodyText->backups;
+    } catch (ClientException $e) {
+      if ($e->hasResponse()) {
+        return json_decode($e->getResponse()->getBody())->message;
       }
-    }
-    else {
-      return $this->ping();
+      else {
+        return 'Cannot find backup for this site.';
+      }
     }
 
   }
