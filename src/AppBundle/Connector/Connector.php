@@ -133,30 +133,25 @@ class Connector {
    *   Task ID.
    */
   public function createBackup($label) {
-    if ($this->ping() == 'pong') {
-      try {
-        $result = $this->client->post($this->url . '/api/v1/sites/' . $this->siteId . '/backup',
-          [
-            'auth' => [
-              $this->username,
-              $this->password
-            ],
-            'json' => ['label' => $label],
-          ]);
-        $bodyText = json_decode($result->getBody());
+    try {
+      $result = $this->client->post($this->url . '/api/v1/sites/' . $this->siteId . '/backup',
+        [
+          'auth' => [
+            $this->username,
+            $this->password
+          ],
+          'json' => ['label' => $label],
+        ]);
+      $bodyText = json_decode($result->getBody());
 
-        return $bodyText->task_id;
-      } catch (ClientException $e) {
-        if ($e->hasResponse()) {
-          return json_decode($e->getResponse()->getBody())->message;
-        }
-        else {
-          return 'Cannot create backup.';
-        }
+      return $bodyText->task_id;
+    } catch (ClientException $e) {
+      if ($e->hasResponse()) {
+        return json_decode($e->getResponse()->getBody())->message;
       }
-    }
-    else {
-      return $this->ping();
+      else {
+        return 'Cannot create backup.';
+      }
     }
   }
 
