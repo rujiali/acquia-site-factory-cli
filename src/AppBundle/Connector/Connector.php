@@ -2,7 +2,6 @@
 namespace AppBundle\Connector;
 
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Client;
 use Symfony\Component\Yaml\Parser;
 
 /**
@@ -37,12 +36,6 @@ class Connector {
   protected $siteId;
 
   /**
-   * @var \GuzzleHttp\Client
-   *   Guzzle client.
-   */
-  protected $client;
-
-  /**
    * @var array
    *   Configurations array.
    */
@@ -57,8 +50,8 @@ class Connector {
   /**
    * Connector constructor.
    */
-  public function __construct($root) {
-    $this->client = new Client();
+  public function __construct($root, $client) {
+    $this->client = $client;
     $parser = new Parser();
     $this->root = $root;
 
@@ -89,7 +82,7 @@ class Connector {
         return $bodyText->message;
       } catch (ClientException $e) {
         if ($e->hasResponse()) {
-          return $e->getResponse()->getBody()->message;
+          return json_decode($e->getResponse()->getBody())->message;
         }
         else {
           return 'Cannot connect to site factory';
@@ -108,29 +101,24 @@ class Connector {
    */
   public function listBackups() {
 
-    if ($this->ping() == 'pong') {
-      try {
-        $result = $this->client->get($this->url . '/api/v1/sites/' . $this->siteId . '/backups',
-          [
-            'auth' => [
-              $this->username,
-              $this->password
-            ],
-          ]);
-        $bodyText = json_decode($result->getBody());
+    try {
+      $result = $this->client->get($this->url . '/api/v1/sites/' . $this->siteId . '/backups',
+        [
+          'auth' => [
+            $this->username,
+            $this->password
+          ],
+        ]);
+      $bodyText = json_decode($result->getBody());
 
-        return $bodyText->backups;
-      } catch (ClientException $e) {
-        if ($e->hasResponse()) {
-          return json_decode($e->getResponse()->getBody())->message;
-        }
-        else {
-          return 'Cannot find backup for this site.';
-        }
+      return $bodyText->backups;
+    } catch (ClientException $e) {
+      if ($e->hasResponse()) {
+        return json_decode($e->getResponse()->getBody())->message;
       }
-    }
-    else {
-      return $this->ping();
+      else {
+        return 'Cannot find backup for this site.';
+      }
     }
 
   }
@@ -145,30 +133,55 @@ class Connector {
    *   Task ID.
    */
   public function createBackup($label) {
-    if ($this->ping() == 'pong') {
-      try {
-        $result = $this->client->post($this->url . '/api/v1/sites/' . $this->siteId . '/backup',
-          [
-            'auth' => [
-              $this->username,
-              $this->password
-            ],
-            'json' => ['label' => $label],
-          ]);
-        $bodyText = json_decode($result->getBody());
+    try {
+      $result = $this->client->post($this->url . '/api/v1/sites/' . $this->siteId . '/backup',
+        [
+          'auth' => [
+            $this->username,
+            $this->password
+          ],
+          'json' => ['label' => $label],
+        ]);
+      $bodyText = json_decode($result->getBody());
 
-        return $bodyText->task_id;
-      } catch (ClientException $e) {
-        if ($e->hasResponse()) {
-          return json_decode($e->getResponse()->getBody())->message;
-        }
-        else {
-          return 'Cannot create backup.';
-        }
+      return $bodyText->task_id;
+    } catch (ClientException $e) {
+      if ($e->hasResponse()) {
+        return json_decode($e->getResponse()->getBody())->message;
+      }
+      else {
+        return 'Cannot create backup.';
       }
     }
-    else {
-      return $this->ping();
+  }
+
+  /**
+   * Get backup URL.
+   *
+   * @param $backup_id
+   *
+   * @return string
+   */
+  public function getBackupURL($backup_id) {
+    try {
+      $result = $this->client->get($this->url . '/api/v1/sites/' . $this->siteId . '/backups/' . $backup_id . '/url',
+        [
+          'auth' => [
+            $this->username,
+            $this->password
+          ],
+        ]);
+
+      $bodyText = json_decode($result->getBody());
+
+      return $bodyText->url;
+    } catch (ClientException $e) {
+      if ($e->hasResponse()) {
+        return json_decode($e->getResponse()->getBody())->message;
+      }
+      else {
+        return 'Cannot get backup URL.';
+      }
     }
   }
 
@@ -178,43 +191,19 @@ class Connector {
    * @return string
    */
   public function getLatestBackupURL() {
-    if ($this->ping() == 'pong') {
-      // Find out the latest backup ID.
-      $backups = $this->listBackups();
-      if (is_array($backups)) {
-        if (!empty($backups)) {
-          $backup_id = $backups[0]->id;
-          try {
-            $result = $this->client->get($this->url . '/api/v1/sites/' . $this->siteId . '/backups/' . $backup_id . '/url',
-              [
-                'auth' => [
-                  $this->username,
-                  $this->password
-                ],
-              ]);
-
-            $bodyText = json_decode($result->getBody());
-
-            return $bodyText->url;
-          } catch (ClientException $e) {
-            if ($e->hasResponse()) {
-              return json_decode($e->getResponse()->getBody())->message;
-            }
-            else {
-              return 'Cannot get backup URL.';
-            }
-          }
-        }
-        else {
-          return 'There is no backup available.';
-        }
+    // Find out the latest backup ID.
+    $backups = $this->listBackups();
+    if (is_array($backups)) {
+      if (!empty($backups)) {
+        $backup_id = $backups[0]->id;
+        return $this->getBackupURL($backup_id);
       }
       else {
-        return $backups;
+        return 'There is no backup available.';
       }
     }
     else {
-      return $this->ping();
+      return $backups;
     }
   }
 
