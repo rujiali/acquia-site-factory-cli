@@ -2,7 +2,6 @@
 namespace AppBundle\Connector;
 
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Client;
 use Symfony\Component\Yaml\Parser;
 
 /**
@@ -37,12 +36,6 @@ class Connector {
   protected $siteId;
 
   /**
-   * @var \GuzzleHttp\Client
-   *   Guzzle client.
-   */
-  protected $client;
-
-  /**
    * @var array
    *   Configurations array.
    */
@@ -57,8 +50,8 @@ class Connector {
   /**
    * Connector constructor.
    */
-  public function __construct($root) {
-    $this->client = new Client();
+  public function __construct($root, $client) {
+    $this->client = $client;
     $parser = new Parser();
     $this->root = $root;
 
@@ -89,7 +82,7 @@ class Connector {
         return $bodyText->message;
       } catch (ClientException $e) {
         if ($e->hasResponse()) {
-          return $e->getResponse()->getBody()->message;
+          return json_decode($e->getResponse()->getBody())->message;
         }
         else {
           return 'Cannot connect to site factory';

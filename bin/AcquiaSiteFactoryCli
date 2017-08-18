@@ -16,10 +16,12 @@ use AppBundle\Commands\CreateBackupCommand;
 use AppBundle\Commands\GetLatestBackupURLCommand;
 use AppBundle\Commands\ListBackupsCommand;
 use AppBundle\Connector\Connector;
+use GuzzleHttp\Client;
 
 $application = new Application();
+$client = new Client();
 
-$connector = new Connector($root);
+$connector = new Connector($root, $client);
 
 $application->add(New PingCommand($connector));
 $application->add(New CreateBackupCommand($connector));
