@@ -47,7 +47,7 @@ class CreateBackupTest extends TestCase {
 
     $connector = new Connector($this->root, $client);
 
-    $this->assertTrue($connector->ping() === 'Access denied');
+    $this->assertTrue($connector->createBackup('autobackup') === 'Access denied');
   }
 
   public function tearDown() {

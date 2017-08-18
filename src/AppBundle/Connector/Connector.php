@@ -156,48 +156,54 @@ class Connector {
   }
 
   /**
+   * Get backup URL.
+   *
+   * @param $backup_id
+   *
+   * @return string
+   */
+  public function getBackupURL($backup_id) {
+    try {
+      $result = $this->client->get($this->url . '/api/v1/sites/' . $this->siteId . '/backups/' . $backup_id . '/url',
+        [
+          'auth' => [
+            $this->username,
+            $this->password
+          ],
+        ]);
+
+      $bodyText = json_decode($result->getBody());
+
+      return $bodyText->url;
+    } catch (ClientException $e) {
+      if ($e->hasResponse()) {
+        return json_decode($e->getResponse()->getBody())->message;
+      }
+      else {
+        return 'Cannot get backup URL.';
+      }
+    }
+  }
+
+  /**
    * Get backup URL for latest backup.
    *
    * @return string
    */
   public function getLatestBackupURL() {
-    if ($this->ping() == 'pong') {
-      // Find out the latest backup ID.
-      $backups = $this->listBackups();
-      if (is_array($backups)) {
-        if (!empty($backups)) {
-          $backup_id = $backups[0]->id;
-          try {
-            $result = $this->client->get($this->url . '/api/v1/sites/' . $this->siteId . '/backups/' . $backup_id . '/url',
-              [
-                'auth' => [
-                  $this->username,
-                  $this->password
-                ],
-              ]);
-
-            $bodyText = json_decode($result->getBody());
-
-            return $bodyText->url;
-          } catch (ClientException $e) {
-            if ($e->hasResponse()) {
-              return json_decode($e->getResponse()->getBody())->message;
-            }
-            else {
-              return 'Cannot get backup URL.';
-            }
-          }
-        }
-        else {
-          return 'There is no backup available.';
-        }
+    // Find out the latest backup ID.
+    $backups = $this->listBackups();
+    if (is_array($backups)) {
+      if (!empty($backups)) {
+        $backup_id = $backups[0]->id;
+        return $this->getBackupURL($backup_id);
       }
       else {
-        return $backups;
+        return 'There is no backup available.';
       }
     }
     else {
-      return $this->ping();
+      return $backups;
     }
   }
 
