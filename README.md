@@ -1,3 +1,4 @@
+[![CircleCI](https://circleci.com/gh/rujiali/acquia-site-factory-cli/tree/master.svg?style=svg)](https://circleci.com/gh/rujiali/acquia-site-factory-cli/tree/master)
 # Acquia Site Factory Cli
 
 ## Installation
