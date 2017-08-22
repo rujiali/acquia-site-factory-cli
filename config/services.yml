@@ -1,0 +1,35 @@
+services:
+  symfony.application:
+    class: Symfony\Component\Console\Application
+    calls:
+      - [add, ['@asfc.PingCommand']]
+      - [add, ['@asfc.ListBackupsCommand']]
+      - [add, ['@asfc.CreateBackupCommand']]
+      - [add, ['@asfc.GetLatestBackupURLCommand']]
+
+  asfc.PingCommand:
+    class: AppBundle\Commands\PingCommand
+    arguments: ['@asfc.connector']
+
+  asfc.ListBackupsCommand:
+    class: AppBundle\Commands\ListBackupsCommand
+    arguments: ['@asfc.connector']
+
+  asfc.CreateBackupCommand:
+    class: AppBundle\Commands\CreateBackupCommand
+    arguments: ['@asfc.connector']
+
+  asfc.GetLatestBackupURLCommand:
+    class: AppBundle\Commands\GetLatestBackupURLCommand
+    arguments: ['@asfc.connector']
+
+  asfc.connector:
+    class: AppBundle\Connector\Connector
+    arguments: ['@guzzle']
+
+  symfony.console_output:
+    class: Symfony\Component\Console\Output\ConsoleOutput
+    public: true
+
+  guzzle:
+    class: \GuzzleHttp\Client
