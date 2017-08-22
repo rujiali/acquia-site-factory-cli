@@ -36,7 +36,7 @@ class UrlTest extends TestCase {
     $handler = HandlerStack::create($mock);
     $client = new Client(['handler' => $handler]);
 
-    $connector = new Connector($this->root, $client);
+    $connector = new Connector($client);
 
     $this->assertTrue(is_string($connector->getBackupURL($this->backup_id)));
   }
@@ -48,7 +48,7 @@ class UrlTest extends TestCase {
     $handler = HandlerStack::create($mock);
     $client = new Client(['handler' => $handler]);
 
-    $connector = new Connector($this->root, $client);
+    $connector = new Connector($client);
 
     $this->assertTrue($connector->getBackupURL($this->backup_id) === 'Access denied');
   }

@@ -33,7 +33,7 @@ class PingTest extends TestCase {
     $handler = HandlerStack::create($mock);
     $client = new Client(['handler' => $handler]);
 
-    $connector = new Connector($this->root, $client);
+    $connector = new Connector($client);
 
     $this->assertTrue($connector->ping() === 'pong');
   }
@@ -45,7 +45,7 @@ class PingTest extends TestCase {
     $handler = HandlerStack::create($mock);
     $client = new Client(['handler' => $handler]);
 
-    $connector = new Connector($this->root, $client);
+    $connector = new Connector($client);
 
     $this->assertTrue($connector->ping() === 'Access denied');
   }

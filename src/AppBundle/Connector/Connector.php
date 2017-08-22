@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Connector;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Symfony\Component\Yaml\Parser;
 
@@ -50,7 +51,13 @@ class Connector {
   /**
    * Connector constructor.
    */
-  public function __construct($root, $client) {
+  public function __construct(Client $client) {
+    if (file_exists(__DIR__ . '/../../../../../autoload.php')) {
+      $root = __DIR__ . '/../../../../../../';
+    }
+    else {
+      $root = __DIR__ . '/../../../';
+    }
     $this->client = $client;
     $parser = new Parser();
     $this->root = $root;

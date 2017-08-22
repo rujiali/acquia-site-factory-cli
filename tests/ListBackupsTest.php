@@ -33,7 +33,7 @@ class ListBackupsTest extends TestCase {
     $handler = HandlerStack::create($mock);
     $client = new Client(['handler' => $handler]);
 
-    $connector = new Connector($this->root, $client);
+    $connector = new Connector($client);
 
     $this->assertTrue(is_array($connector->listBackups()));
   }
@@ -45,7 +45,7 @@ class ListBackupsTest extends TestCase {
     $handler = HandlerStack::create($mock);
     $client = new Client(['handler' => $handler]);
 
-    $connector = new Connector($this->root, $client);
+    $connector = new Connector($client);
 
     $this->assertTrue($connector->listBackups() === 'Access denied');
   }

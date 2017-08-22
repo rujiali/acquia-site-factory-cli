@@ -10,22 +10,15 @@ else {
   require __DIR__ . '/../vendor/autoload.php';
 }
 
-use Symfony\Component\Console\Application;
-use AppBundle\Commands\PingCommand;
-use AppBundle\Commands\CreateBackupCommand;
-use AppBundle\Commands\GetLatestBackupURLCommand;
-use AppBundle\Commands\ListBackupsCommand;
-use AppBundle\Connector\Connector;
-use GuzzleHttp\Client;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Config\FileLocator;
 
-$application = new Application();
-$client = new Client();
+$container = new ContainerBuilder();
+$loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../config'));
+$loader->load('services.yml');
 
-$connector = new Connector($root, $client);
+$output = $container->get('symfony.console_output');
 
-$application->add(New PingCommand($connector));
-$application->add(New CreateBackupCommand($connector));
-$application->add(New ListBackupsCommand($connector));
-$application->add(New GetLatestBackupURLCommand($connector));
-
-$application->run();
+$application = $container->get('symfony.application');
+$application->run(null, $output);
