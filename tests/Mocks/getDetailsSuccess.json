@@ -1,0 +1,19 @@
+{
+  "id": 3246,
+  "created": 1501647612,
+  "owner": "test",
+  "site": "test",
+  "domains": [
+    "site.site.com"
+  ],
+  "groups": [
+    1
+  ],
+  "part_of_collection": true,
+  "is_primary": true,
+  "collection_id": 1,
+  "collection_domains": [
+    "test.test.com",
+    "test.test.com"
+  ]
+}

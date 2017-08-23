@@ -4,8 +4,10 @@ services:
     calls:
       - [add, ['@asfc.PingCommand']]
       - [add, ['@asfc.ListBackupsCommand']]
+      - [add, ['@asfc.ListSitesCommand']]
       - [add, ['@asfc.CreateBackupCommand']]
       - [add, ['@asfc.GetLatestBackupURLCommand']]
+      - [add, ['@asfc.GetSiteDetailsCommand']]
 
   asfc.PingCommand:
     class: AppBundle\Commands\PingCommand
@@ -15,6 +17,10 @@ services:
     class: AppBundle\Commands\ListBackupsCommand
     arguments: ['@asfc.connector']
 
+  asfc.ListSitesCommand:
+    class: AppBundle\Commands\ListSitesCommand
+    arguments: ['@asfc.connectorSites']
+
   asfc.CreateBackupCommand:
     class: AppBundle\Commands\CreateBackupCommand
     arguments: ['@asfc.connector']
@@ -23,8 +29,16 @@ services:
     class: AppBundle\Commands\GetLatestBackupURLCommand
     arguments: ['@asfc.connector']
 
+  asfc.GetSiteDetailsCommand:
+    class: AppBundle\Commands\GetSiteDetailsCommand
+    arguments: ['@asfc.connectorSites']
+
   asfc.connector:
     class: AppBundle\Connector\Connector
+    arguments: ['@guzzle']
+
+  asfc.connectorSites:
+    class: AppBundle\Connector\ConnectorSites
     arguments: ['@guzzle']
 
   symfony.console_output:
