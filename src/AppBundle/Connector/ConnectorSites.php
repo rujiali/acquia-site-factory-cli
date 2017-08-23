@@ -116,4 +116,40 @@ class ConnectorSites
 
         return 'Cannot find details in sitefactory.yml file.';
     }
+
+    /**
+     * Get site details
+     *
+     * @param int $siteId Site ID.
+     *
+     * @return mixed|string
+     */
+    public function getSiteDetails($siteId)
+    {
+        if ($this->url && $this->username && $this->password) {
+            try {
+                $result = $this->client->get(
+                    $this->url.'/api/v1/sites/'.$siteId,
+                    [
+                    'auth' => [
+                      $this->username,
+                      $this->password,
+                    ],
+                    ]
+                );
+
+                $bodyText = json_decode($result->getBody());
+
+                return $bodyText;
+            } catch (ClientException $e) {
+                if ($e->hasResponse()) {
+                    return json_decode($e->getResponse()->getBody())->message;
+                }
+
+                return 'Cannot connect to site factory';
+            }
+        }
+
+        return 'Cannot find details in sitefactory.yml file.';
+    }
 }

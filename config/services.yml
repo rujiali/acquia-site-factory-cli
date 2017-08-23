@@ -7,6 +7,7 @@ services:
       - [add, ['@asfc.ListSitesCommand']]
       - [add, ['@asfc.CreateBackupCommand']]
       - [add, ['@asfc.GetLatestBackupURLCommand']]
+      - [add, ['@asfc.GetSiteDetailsCommand']]
 
   asfc.PingCommand:
     class: AppBundle\Commands\PingCommand
@@ -27,6 +28,10 @@ services:
   asfc.GetLatestBackupURLCommand:
     class: AppBundle\Commands\GetLatestBackupURLCommand
     arguments: ['@asfc.connector']
+
+  asfc.GetSiteDetailsCommand:
+    class: AppBundle\Commands\GetSiteDetailsCommand
+    arguments: ['@asfc.connectorSites']
 
   asfc.connector:
     class: AppBundle\Connector\Connector
