@@ -21,6 +21,10 @@ in ```sitefactory.yml``` file
 ```./bin/AcquiaSiteFactoryCli app:ping```
 ### List all backups
 ```./bin/AcquiaSiteFactoryCli app:listBackups```
+### List all sites
+```bin/AcquiaSiteFactoryCli app:listSites```
+### Get site details
+```bin/AcquiaSiteFactoryCli app:getSiteDetails {site ID}```
 ### Create Backup
 ```./bin/AcquiaSiteFactoryCli app:createBackup```
 ### Show latest backup URL
