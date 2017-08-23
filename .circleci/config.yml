@@ -37,4 +37,5 @@ jobs:
       - run: vendor/bin/phpunit
 
       # Check code syntax
+      - run: vendor/bin/phpcs --config-set installed_paths vendor/escapestudios/symfony2-coding-standard
       - run: vendor/bin/phpcs --standard=Symfony ./src/
