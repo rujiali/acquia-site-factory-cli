@@ -10,48 +10,57 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\RequestException;
 use PHPUnit\Framework\TestCase;
 
-class PingTest extends TestCase {
+class PingTest extends TestCase
+{
 
-  protected $root;
+    protected $root;
 
-  protected $successBody;
+    protected $successBody;
 
-  protected $failBody;
+    protected $failBody;
 
-  public function setUp() {
-    parent::setUp();
-    $this->root = __DIR__ . '/../';
-    copy($this->root . '/sitefactory.default.yml', $this->root . '/sitefactory.yml');
-    $this->successBody = file_get_contents(__DIR__ . '/Mocks/pingSuccess.json');
-    $this->failBody = file_get_contents(__DIR__ . '/Mocks/pingFail.json');
-  }
+    public function setUp()
+    {
+        parent::setUp();
+        $this->root = __DIR__.'/../';
+        copy($this->root.'/sitefactory.default.yml', $this->root.'/sitefactory.yml');
+        $this->successBody = file_get_contents(__DIR__.'/Mocks/pingSuccess.json');
+        $this->failBody = file_get_contents(__DIR__.'/Mocks/pingFail.json');
+    }
 
-  public function testPingSuccess() {
-    $mock = new MockHandler([
-      new Response(200, [], $this->successBody),
-    ]);
-    $handler = HandlerStack::create($mock);
-    $client = new Client(['handler' => $handler]);
+    public function testPingSuccess()
+    {
+        $mock = new MockHandler(
+            [
+            new Response(200, [], $this->successBody),
+            ]
+        );
+        $handler = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handler]);
 
-    $connector = new Connector($client);
+        $connector = new Connector($client);
 
-    $this->assertTrue($connector->ping() === 'pong');
-  }
+        $this->assertTrue($connector->ping() === 'pong');
+    }
 
-  public function testPingFail() {
-    $mock = new MockHandler([
-      new Response(403, [], $this->failBody),
-    ]);
-    $handler = HandlerStack::create($mock);
-    $client = new Client(['handler' => $handler]);
+    public function testPingFail()
+    {
+        $mock = new MockHandler(
+            [
+            new Response(403, [], $this->failBody),
+            ]
+        );
+        $handler = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handler]);
 
-    $connector = new Connector($client);
+        $connector = new Connector($client);
 
-    $this->assertTrue($connector->ping() === 'Access denied');
-  }
+        $this->assertTrue($connector->ping() === 'Access denied');
+    }
 
-  public function tearDown() {
-    parent::tearDown();
-    unlink($this->root . '/sitefactory.yml');
-  }
+    public function tearDown()
+    {
+        parent::tearDown();
+        unlink($this->root.'/sitefactory.yml');
+    }
 }

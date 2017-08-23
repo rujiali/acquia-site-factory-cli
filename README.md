@@ -12,6 +12,7 @@ Put your
 2. Site factory apikey (You can find it in your profile page)
 3. The site URL of your site factory UI (For example: https://www.govcms.acsitefactory.com)
 4. The site ID (You can find in your site factory dashboard)
+
 in ```sitefactory.yml``` file
 
 ## Usage
@@ -24,3 +25,6 @@ in ```sitefactory.yml``` file
 ```./bin/AcquiaSiteFactoryCli app:createBackup```
 ### Show latest backup URL
 ```./bin/AcquiaSiteFactoryCli app:getLatestBackupURL```
+
+## Credit
+This project is sponsored by Australian government Department of Health
