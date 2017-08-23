@@ -26,5 +26,8 @@ in ```sitefactory.yml``` file
 ### Show latest backup URL
 ```./bin/AcquiaSiteFactoryCli app:getLatestBackupURL```
 
+## To do
+:beer:Add commands to cover the rest of the endpoints in [Acquia site factory API reference](https://www.demo.acquia-cc.com/api/v1) 
+
 ## Credit
 This project is sponsored by Australian government Department of Health
