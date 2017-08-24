@@ -25,6 +25,20 @@ class ConnectorSites
     }
 
     /**
+     * Clear site cache.
+     *
+     * @return mixed|string
+     */
+    public function clearCache()
+    {
+        $url = $this->connector->getURL().'/api/v1/sites/'.$this->connector->getSiteID().'/cache-clear';
+        $params = [];
+        $response = $this->connector->connecting($url, $params, 'POST');
+
+        return $response;
+    }
+
+    /**
      * Create backup for specific site in site factory.
      *
      * @param string $label Backup label.

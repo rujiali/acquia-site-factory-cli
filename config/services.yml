@@ -6,8 +6,13 @@ services:
       - [add, ['@asfc.ListBackupsCommand']]
       - [add, ['@asfc.ListSitesCommand']]
       - [add, ['@asfc.CreateBackupCommand']]
+      - [add, ['@asfc.ClearCacheCommand']]
       - [add, ['@asfc.GetLatestBackupURLCommand']]
       - [add, ['@asfc.GetSiteDetailsCommand']]
+
+  asfc.ClearCacheCommand:
+    class: AppBundle\Commands\ClearCacheCommand
+    arguments: ['@asfc.connectorSites']
 
   asfc.PingCommand:
     class: AppBundle\Commands\PingCommand
