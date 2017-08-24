@@ -1,8 +1,8 @@
 <?php
 namespace tests;
 
-use AppBundle\Connector\ConnectorSites;
 use AppBundle\Connector\Connector;
+use AppBundle\Connector\ConnectorSites;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -11,7 +11,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\RequestException;
 use PHPUnit\Framework\TestCase;
 
-class GetSitesDetailsTest extends TestCase
+class DeleteBackupTest extends TestCase
 {
 
     protected $root;
@@ -25,11 +25,11 @@ class GetSitesDetailsTest extends TestCase
         parent::setUp();
         $this->root = __DIR__.'/../';
         copy($this->root.'/sitefactory.default.yml', $this->root.'/sitefactory.yml');
-        $this->successBody = file_get_contents(__DIR__.'/Mocks/getDetailsSuccess.json');
+        $this->successBody = file_get_contents(__DIR__.'/Mocks/deleteBackupSuccess.json');
         $this->failBody = file_get_contents(__DIR__.'/Mocks/pingFail.json');
     }
 
-    public function testSiteDetailsSuccess()
+    public function testCreateBackupSuccess()
     {
         $mock = new MockHandler(
             [
@@ -40,12 +40,12 @@ class GetSitesDetailsTest extends TestCase
         $client = new Client(['handler' => $handler]);
 
         $connector = new Connector($client);
-        $connectorSite = new ConnectorSites($connector);
+        $connectorSites = new ConnectorSites($connector);
 
-        $this->assertTrue(is_object($connectorSite->getSiteDetails('1')));
+        $this->assertTrue(is_numeric($connectorSites->deleteBackup('1', NULL, NULL, NULL)));
     }
 
-    public function testSiteDetailsFail()
+    public function testCreateBackupFail()
     {
         $mock = new MockHandler(
             [
@@ -56,9 +56,9 @@ class GetSitesDetailsTest extends TestCase
         $client = new Client(['handler' => $handler]);
 
         $connector = new Connector($client);
-        $connectorSite = new ConnectorSites($connector);
+        $connectorSites = new ConnectorSites($connector);
 
-        $this->assertTrue($connectorSite->getSiteDetails('1') === 'Access denied');
+        $this->assertTrue($connectorSites->deleteBackup('1', NULL, NULL, NULL) === 'Access denied');
     }
 
     public function tearDown()

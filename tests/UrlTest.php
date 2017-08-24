@@ -2,6 +2,7 @@
 namespace tests;
 
 use AppBundle\Connector\Connector;
+use AppBundle\Connector\ConnectorSites;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -42,8 +43,9 @@ class UrlTest extends TestCase
         $client = new Client(['handler' => $handler]);
 
         $connector = new Connector($client);
+        $connectorSite = new ConnectorSites($connector);
 
-        $this->assertTrue(is_string($connector->getBackupURL($this->backup_id)));
+        $this->assertTrue(is_string($connectorSite->getBackupURL($this->backup_id)));
     }
 
     public function testUrlFail()
@@ -57,8 +59,9 @@ class UrlTest extends TestCase
         $client = new Client(['handler' => $handler]);
 
         $connector = new Connector($client);
+        $connectorSite = new ConnectorSites($connector);
 
-        $this->assertTrue($connector->getBackupURL($this->backup_id) === 'Access denied');
+        $this->assertTrue($connectorSite->getBackupURL($this->backup_id) === 'Access denied');
     }
 
     public function tearDown()

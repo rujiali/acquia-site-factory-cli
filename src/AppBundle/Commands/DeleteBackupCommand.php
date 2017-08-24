@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- *   CreateBackup command.
+ *   DeleteBackup command.
  */
 namespace AppBundle\Commands;
 
@@ -12,14 +12,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use AppBundle\Connector\ConnectorSites;
 
 /**
- * Class CreateBackupCommand
+ * Class DeleteBackupCommand
  */
-class CreateBackupCommand extends Command
+class DeleteBackupCommand extends Command
 {
     protected $connectorSites;
 
     /**
-     * CreateBackupCommand constructor.
+     * DeleteBackupCommand constructor.
      *
      * @param \AppBundle\Connector\ConnectorSites $connectorSites
      */
@@ -35,9 +35,13 @@ class CreateBackupCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:createBackup')
+            ->setName('app:deleteBackup')
             ->setDescription('Command to create backup for specific site in site factory')
-            ->addArgument('label', InputArgument::OPTIONAL, 'Backup Label');
+            ->addArgument('backupId', InputArgument::REQUIRED, 'Backup ID')
+            ->addArgument('callback_url', InputArgument::OPTIONAL, 'Callback URL')
+            ->addArgument('callback_method', InputArgument::OPTIONAL, 'Callback method')
+            ->addArgument('caller_data', InputArgument::OPTIONAL, 'Caller data')
+        ;
     }
 
     /**
@@ -45,11 +49,11 @@ class CreateBackupCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $label = $input->getArgument('label');
-        if (!$label) {
-            $label = 'Auto backup.';
-        }
-        $taskId = $this->connectorSites->createBackup($label);
+        $backupId = $input->getArgument('backupId');
+        $callbackUrl = $input->getArgument('callback_url');
+        $callbackMethod = $input->getArgument('callback_method');
+        $callerData = $input->getArgument('caller_data');
+        $taskId = $this->connectorSites->deleteBackup($backupId, $callbackUrl, $callbackMethod, $callerData);
         $output->writeln($taskId);
     }
 }

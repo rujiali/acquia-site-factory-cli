@@ -1,6 +1,7 @@
 <?php
 namespace tests;
 
+use AppBundle\Connector\Connector;
 use AppBundle\Connector\ConnectorSites;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -35,8 +36,9 @@ class ListSitesTest extends TestCase
         );
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
+        $connector = new Connector($client);
 
-        $connectorSites = new ConnectorSites($client);
+        $connectorSites = new ConnectorSites($connector);
 
         $this->assertTrue(is_array($connectorSites->listSites(NULL, NULL)));
     }
@@ -50,8 +52,9 @@ class ListSitesTest extends TestCase
         );
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
+        $connector = new Connector($client);
 
-        $connectorSites = new ConnectorSites($client);
+        $connectorSites = new ConnectorSites($connector);
 
         $this->assertTrue($connectorSites->listSites(NULL, NULL) === 'Access denied');
     }

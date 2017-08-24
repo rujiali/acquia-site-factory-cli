@@ -2,6 +2,7 @@
 namespace tests;
 
 use AppBundle\Connector\Connector;
+use AppBundle\Connector\ConnectorSites;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -39,8 +40,9 @@ class ListBackupsTest extends TestCase
         $client = new Client(['handler' => $handler]);
 
         $connector = new Connector($client);
+        $connectorSites = new ConnectorSites($connector);
 
-        $this->assertTrue(is_array($connector->listBackups()));
+        $this->assertTrue(is_array($connectorSites->listBackups()));
     }
 
     public function testBackupsFail()
@@ -54,8 +56,9 @@ class ListBackupsTest extends TestCase
         $client = new Client(['handler' => $handler]);
 
         $connector = new Connector($client);
+        $connectorSites = new ConnectorSites($connector);
 
-        $this->assertTrue($connector->listBackups() === 'Access denied');
+        $this->assertTrue($connectorSites->listBackups() === 'Access denied');
     }
 
     public function tearDown()

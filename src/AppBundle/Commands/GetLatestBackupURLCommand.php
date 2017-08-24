@@ -8,22 +8,22 @@ namespace AppBundle\Commands;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use AppBundle\Connector\Connector;
+use AppBundle\Connector\ConnectorSites;
 
 /**
  * Class GetLatestBackupURLCommand
  */
 class GetLatestBackupURLCommand extends Command
 {
-    protected $connector;
+    protected $connectorSites;
 
     /**
      * GetLatestBackupURLCommand constructor.
-     * @param \AppBundle\Connector\Connector $connector
+     * @param \AppBundle\Connector\ConnectorSites $connectorSites
      */
-    public function __construct(Connector $connector)
+    public function __construct(ConnectorSites $connectorSites)
     {
-        $this->connector = $connector;
+        $this->connectorSites = $connectorSites;
         parent::__construct();
     }
 
@@ -42,7 +42,7 @@ class GetLatestBackupURLCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $url = $this->connector->getLatestBackupURL();
+        $url = $this->connectorSites->getLatestBackupURL();
         $output->write($url);
     }
 }
