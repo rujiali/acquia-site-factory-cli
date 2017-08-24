@@ -2,6 +2,7 @@
 namespace tests;
 
 use AppBundle\Connector\Connector;
+use AppBundle\Connector\ConnectorSites;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -39,8 +40,9 @@ class CreateBackupTest extends TestCase
         $client = new Client(['handler' => $handler]);
 
         $connector = new Connector($client);
+        $connectorSites = new ConnectorSites($connector);
 
-        $this->assertTrue(is_numeric($connector->createBackup('autobackup')));
+        $this->assertTrue(is_numeric($connectorSites->createBackup('autobackup')));
     }
 
     public function testCreateBackupFail()
@@ -54,8 +56,9 @@ class CreateBackupTest extends TestCase
         $client = new Client(['handler' => $handler]);
 
         $connector = new Connector($client);
+        $connectorSites = new ConnectorSites($connector);
 
-        $this->assertTrue($connector->createBackup('autobackup') === 'Access denied');
+        $this->assertTrue($connectorSites->createBackup('autobackup') === 'Access denied');
     }
 
     public function tearDown()

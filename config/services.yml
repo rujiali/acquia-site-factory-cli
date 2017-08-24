@@ -15,7 +15,7 @@ services:
 
   asfc.ListBackupsCommand:
     class: AppBundle\Commands\ListBackupsCommand
-    arguments: ['@asfc.connector']
+    arguments: ['@asfc.connectorSites']
 
   asfc.ListSitesCommand:
     class: AppBundle\Commands\ListSitesCommand
@@ -23,11 +23,11 @@ services:
 
   asfc.CreateBackupCommand:
     class: AppBundle\Commands\CreateBackupCommand
-    arguments: ['@asfc.connector']
+    arguments: ['@asfc.connectorSites']
 
   asfc.GetLatestBackupURLCommand:
     class: AppBundle\Commands\GetLatestBackupURLCommand
-    arguments: ['@asfc.connector']
+    arguments: ['@asfc.connectorSites']
 
   asfc.GetSiteDetailsCommand:
     class: AppBundle\Commands\GetSiteDetailsCommand
@@ -39,7 +39,7 @@ services:
 
   asfc.connectorSites:
     class: AppBundle\Connector\ConnectorSites
-    arguments: ['@guzzle']
+    arguments: ['@asfc.connector']
 
   symfony.console_output:
     class: Symfony\Component\Console\Output\ConsoleOutput

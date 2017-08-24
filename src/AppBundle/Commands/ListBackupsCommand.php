@@ -9,23 +9,23 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\OutputInterface;
-use AppBundle\Connector\Connector;
+use AppBundle\Connector\ConnectorSites;
 
 /**
  * Class ListBackupsCommand
  */
 class ListBackupsCommand extends Command
 {
-    protected $connector;
+    protected $connectorSites;
 
     /**
      * ListBackupsCommand constructor.
      *
-     * @param \AppBundle\Connector\Connector $connector
+     * @param \AppBundle\Connector\ConnectorSites $connectorSites
      */
-    public function __construct(Connector $connector)
+    public function __construct(ConnectorSites $connectorSites)
     {
-        $this->connector = $connector;
+        $this->connectorSites = $connectorSites;
         parent::__construct();
     }
 
@@ -44,7 +44,7 @@ class ListBackupsCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $backups = $this->connector->listBackups();
+        $backups = $this->connectorSites->listBackups();
         if (is_array($backups)) {
             $headers = ['id', 'nid', 'status', 'uid', 'timestamp', 'file', 'label'];
             $backuplist = [];

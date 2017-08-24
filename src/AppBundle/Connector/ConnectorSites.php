@@ -5,73 +5,124 @@
  */
 namespace AppBundle\Connector;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use Symfony\Component\Yaml\Parser;
+use AppBundle\Connector\Connector;
 
 /**
  * Class Connector
  */
 class ConnectorSites
 {
-
-    /**
-     * @var string
-     *   username in site factory.
-     */
-    protected $username;
-
-    /**
-     * @var string
-     *   apikey in site factory.
-     */
-    protected $password;
-
-    /**
-     * @var string
-     *   Site URL in site factory.
-     */
-    protected $url;
-
-    /**
-     * @var int
-     *   Site ID.
-     */
-    protected $siteId;
-
-    /**
-     * @var array
-     *   Configurations array.
-     */
-    protected $config;
-
-    /**
-     * @var string.
-     *   Path to root.
-     */
-    protected $root;
+    protected $connector;
 
     /**
      * Connector constructor.
      *
-     * @param \GuzzleHttp\Client $client
+     * @param \AppBundle\Connector\Connector $connector
      */
-    public function __construct(Client $client)
+    public function __construct(Connector $connector)
     {
-        if (file_exists(__DIR__.'/../../../../../autoload.php')) {
-            $root = __DIR__.'/../../../../../../';
-        } else {
-            $root = __DIR__.'/../../../';
-        }
-        $this->client = $client;
-        $parser = new Parser();
-        $this->root = $root;
+        $this->connector = $connector;
+    }
 
-        $this->config = $parser->parse(file_get_contents($root.'sitefactory.yml'));
-        $this->username = $this->config['username'];
-        $this->password = $this->config['apikey'];
-        $this->url = $this->config['url'];
-        $this->siteId = $this->config['site_id'];
+    /**
+     * Create backup for specific site in site factory.
+     *
+     * @param string $label Backup label.
+     *
+     * @return integer
+     *   Task ID.
+     */
+    public function createBackup($label)
+    {
+        $url = $this->connector->getURL().'/api/v1/sites/'.$this->connector->getSiteID().'/backup';
+        $params = [
+            'label' => $label,
+        ];
+
+        $response = $this->connector->connecting($url, $params, 'POST');
+
+        // @codingStandardsIgnoreStart
+        if (isset($response->task_id)) {
+            return $response->task_id;
+            // @codingStandardsIgnoreEnd
+        }
+
+        return $response;
+    }
+
+    /**
+     * Get backup URL.
+     *
+     * @param string $backupId Backup ID.
+     *
+     * @return string
+     */
+    public function getBackupURL($backupId)
+    {
+        $url = $this->connector->getURL().'/api/v1/sites/'.$this->connector->getSiteID().'/backups/'.$backupId.'/url';
+        $params = [];
+        $response = $this->connector->connecting($url, $params, 'GET');
+        if (isset($response->url)) {
+            return $response->url;
+        }
+
+        return $response;
+    }
+
+    /**
+     * Get backup URL for latest backup.
+     *
+     * @return string
+     */
+    public function getLatestBackupURL()
+    {
+        // Find out the latest backup ID.
+        $backups = $this->listBackups();
+        if (is_array($backups)) {
+            if (!empty($backups)) {
+                $backupId = $backups[0]->id;
+
+                return $this->getBackupURL($backupId);
+            }
+
+            return 'There is no backup available.';
+        }
+
+        return $backups;
+    }
+
+    /**
+     * Get site details
+     *
+     * @param int $siteId Site ID.
+     *
+     * @return mixed|string
+     */
+    public function getSiteDetails($siteId)
+    {
+        $url = $this->connector->getURL().'/api/v1/sites/'.$siteId;
+        $params = [];
+        $response = $this->connector->connecting($url, $params, 'GET');
+
+        return $response;
+    }
+
+    /**
+     * List all backups in for specific site in site factory.
+     *
+     * @return mixed
+     */
+    public function listBackups()
+    {
+        $url = $this->connector->getURL().'/api/v1/sites/'.$this->connector->getSiteID().'/backups';
+        $params = [];
+        $response = $this->connector->connecting($url, $params, 'GET');
+
+        if (isset($response->backups)) {
+            return $response->backups;
+        }
+
+        return $response;
     }
 
     /**
@@ -85,71 +136,19 @@ class ConnectorSites
      */
     public function listSites($limit, $page, $canary = false)
     {
-        if ($this->url && $this->username && $this->password) {
-            try {
-                $result = $this->client->get(
-                    $this->url.'/api/v1/sites',
-                    [
-                    'auth' => [
-                    $this->username,
-                    $this->password,
-                    ],
-                    'query' => [
-                        'limit' => $limit,
-                        'page' => $page,
-                        'canary' => $canary,
-                    ],
-                    ]
-                );
+        $params = [
+          'limit' => $limit,
+          'page' => $page,
+          'canary' => $canary,
+        ];
+        $url = $this->connector->getURL().'/api/v1/sites';
 
-                $bodyText = json_decode($result->getBody());
+        $response = $this->connector->connecting($url, $params, 'GET');
 
-                return $bodyText->sites;
-            } catch (ClientException $e) {
-                if ($e->hasResponse()) {
-                    return json_decode($e->getResponse()->getBody())->message;
-                }
-
-                return 'Cannot connect to site factory';
-            }
+        if (isset($response->sites)) {
+            return $response->sites;
         }
 
-        return 'Cannot find details in sitefactory.yml file.';
-    }
-
-    /**
-     * Get site details
-     *
-     * @param int $siteId Site ID.
-     *
-     * @return mixed|string
-     */
-    public function getSiteDetails($siteId)
-    {
-        if ($this->url && $this->username && $this->password) {
-            try {
-                $result = $this->client->get(
-                    $this->url.'/api/v1/sites/'.$siteId,
-                    [
-                    'auth' => [
-                      $this->username,
-                      $this->password,
-                    ],
-                    ]
-                );
-
-                $bodyText = json_decode($result->getBody());
-
-                return $bodyText;
-            } catch (ClientException $e) {
-                if ($e->hasResponse()) {
-                    return json_decode($e->getResponse()->getBody())->message;
-                }
-
-                return 'Cannot connect to site factory';
-            }
-        }
-
-        return 'Cannot find details in sitefactory.yml file.';
+        return $response;
     }
 }

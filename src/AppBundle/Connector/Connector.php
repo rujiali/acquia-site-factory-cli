@@ -75,127 +75,32 @@ class Connector
     }
 
     /**
-     * Ping site factory.
+     * Connect to site factory.
      *
-     * @return string
+     * @param string $url    site factory url.
+     * @param array  $params Parameters.
+     * @param string $method Request method.
+     *
+     * @return mixed|string
      */
-    public function ping()
-    {
-        if ($this->url && $this->username && $this->password) {
-            try {
-                $result = $this->client->get(
-                    $this->url.'/api/v1/ping',
-                    [
-                    'auth' => [
-                    $this->username,
-                    $this->password,
-                    ],
-                    ]
-                );
-
-                $bodyText = json_decode($result->getBody());
-
-                return $bodyText->message;
-            } catch (ClientException $e) {
-                if ($e->hasResponse()) {
-                    return json_decode($e->getResponse()->getBody())->message;
-                }
-
-                return 'Cannot connect to site factory';
-            }
-        }
-
-        return 'Cannot find details in sitefactory.yml file.';
-    }
-
-    /**
-     * List all backups in for specific site in site factory.
-     *
-     * @return mixed
-     */
-    public function listBackups()
-    {
-
-        try {
-            $result = $this->client->get(
-                $this->url.'/api/v1/sites/'.$this->siteId.'/backups',
-                [
-                'auth' => [
-                $this->username,
-                $this->password,
-                ],
-                ]
-            );
-            $bodyText = json_decode($result->getBody());
-
-            return $bodyText->backups;
-        } catch (ClientException $e) {
-            if ($e->hasResponse()) {
-                return json_decode($e->getResponse()->getBody())->message;
-            }
-
-            return 'Cannot find backup for this site.';
-        }
-    }
-
-    /**
-     * Create backup for specific site in site factory.
-     *
-     * @param string $label Backup label.
-     *
-     * @return integer
-     *   Task ID.
-     */
-    public function createBackup($label)
+    public function connecting($url, $params, $method)
     {
         try {
-            $result = $this->client->post(
-                $this->url.'/api/v1/sites/'.$this->siteId.'/backup',
+            $result = $this->client->request(
+                $method,
+                $url,
                 [
                 'auth' => [
-                $this->username,
-                $this->password,
+                  $this->username,
+                  $this->password,
                 ],
-                'json' => ['label' => $label],
-                ]
-            );
-            $bodyText = json_decode($result->getBody());
-
-            // @codingStandardsIgnoreStart
-            return $bodyText->task_id;
-            // @codingStandardsIgnoreEnd
-        } catch (ClientException $e) {
-            if ($e->hasResponse()) {
-                return json_decode($e->getResponse()->getBody())->message;
-            }
-
-            return 'Cannot create backup.';
-        }
-    }
-
-    /**
-     * Get backup URL.
-     *
-     * @param string $backupId Backup ID.
-     *
-     * @return string
-     */
-    public function getBackupURL($backupId)
-    {
-        try {
-            $result = $this->client->get(
-                $this->url.'/api/v1/sites/'.$this->siteId.'/backups/'.$backupId.'/url',
-                [
-                'auth' => [
-                $this->username,
-                $this->password,
-                ],
+                'query' => $params,
                 ]
             );
 
             $bodyText = json_decode($result->getBody());
 
-            return $bodyText->url;
+            return $bodyText;
         } catch (ClientException $e) {
             if ($e->hasResponse()) {
                 return json_decode($e->getResponse()->getBody())->message;
@@ -206,24 +111,40 @@ class Connector
     }
 
     /**
-     * Get backup URL for latest backup.
+     * Get site ID.
+     *
+     * @return int|mixed
+     */
+    public function getSiteID()
+    {
+        return $this->siteId;
+    }
+
+    /**
+     * Get Site factory URL.
+     *
+     * @return mixed|string
+     */
+    public function getURL()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Ping site factory.
      *
      * @return string
      */
-    public function getLatestBackupURL()
+    public function ping()
     {
-        // Find out the latest backup ID.
-        $backups = $this->listBackups();
-        if (is_array($backups)) {
-            if (!empty($backups)) {
-                $backupId = $backups[0]->id;
+        $url = $this->getURL().'/api/v1/ping';
+        $params = [];
+        $response = $this->connecting($url, $params, 'GET');
 
-                return $this->getBackupURL($backupId);
-            }
-
-            return 'There is no backup available.';
+        if (isset($response->message)) {
+            return $response->message;
         }
 
-        return $backups;
+        return $response;
     }
 }

@@ -2,6 +2,7 @@
 namespace tests;
 
 use AppBundle\Connector\ConnectorSites;
+use AppBundle\Connector\Connector;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -38,9 +39,10 @@ class GetSitesDetailsTest extends TestCase
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
 
-        $connector = new ConnectorSites($client);
+        $connector = new Connector($client);
+        $connectorSite = new ConnectorSites($connector);
 
-        $this->assertTrue(is_object($connector->getSiteDetails('1')));
+        $this->assertTrue(is_object($connectorSite->getSiteDetails('1')));
     }
 
     public function testSiteDetailsFail()
@@ -53,9 +55,10 @@ class GetSitesDetailsTest extends TestCase
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
 
-        $connector = new ConnectorSites($client);
+        $connector = new Connector($client);
+        $connectorSite = new ConnectorSites($connector);
 
-        $this->assertTrue($connector->getSiteDetails('1') === 'Access denied');
+        $this->assertTrue($connectorSite->getSiteDetails('1') === 'Access denied');
     }
 
     public function tearDown()

@@ -9,23 +9,23 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
-use AppBundle\Connector\Connector;
+use AppBundle\Connector\ConnectorSites;
 
 /**
  * Class CreateBackupCommand
  */
 class CreateBackupCommand extends Command
 {
-    protected $connector;
+    protected $connectorSites;
 
     /**
      * CreateBackupCommand constructor.
      *
-     * @param \AppBundle\Connector\Connector $connector
+     * @param \AppBundle\Connector\ConnectorSites $connectorSites
      */
-    public function __construct(Connector $connector)
+    public function __construct(ConnectorSites $connectorSites)
     {
-        $this->connector = $connector;
+        $this->connectorSites = $connectorSites;
         parent::__construct();
     }
 
@@ -49,7 +49,7 @@ class CreateBackupCommand extends Command
         if (!$label) {
             $label = 'Auto backup.';
         }
-        $taskId = $this->connector->createBackup($label);
+        $taskId = $this->connectorSites->createBackup($label);
         $output->writeln($taskId);
     }
 }
