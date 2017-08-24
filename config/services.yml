@@ -7,6 +7,7 @@ services:
       - [add, ['@asfc.ListSitesCommand']]
       - [add, ['@asfc.CreateBackupCommand']]
       - [add, ['@asfc.ClearCacheCommand']]
+      - [add, ['@asfc.DeleteBackupCommand']]
       - [add, ['@asfc.GetLatestBackupURLCommand']]
       - [add, ['@asfc.GetSiteDetailsCommand']]
 
@@ -28,6 +29,10 @@ services:
 
   asfc.CreateBackupCommand:
     class: AppBundle\Commands\CreateBackupCommand
+    arguments: ['@asfc.connectorSites']
+
+  asfc.DeleteBackupCommand:
+    class: AppBundle\Commands\DeleteBackupCommand
     arguments: ['@asfc.connectorSites']
 
   asfc.GetLatestBackupURLCommand:

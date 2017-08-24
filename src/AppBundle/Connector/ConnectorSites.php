@@ -65,6 +65,36 @@ class ConnectorSites
     }
 
     /**
+     * Delete backup.
+     *
+     * @param int    $backupId       BackupId.
+     * @param string $callbackUrl    Callback URL.
+     * @param string $callbackMethod Callback method.
+     * @param string $callerData     Caller data in JSON format.
+     *
+     * @return mixed|string
+     */
+    public function deleteBackup($backupId, $callbackUrl, $callbackMethod, $callerData)
+    {
+        $url = $this->connector->getURL().'/api/v1/sites/'.$this->connector->getSiteID().'/backups/'.$backupId;
+        $params = [
+            'callback_url' => $callbackUrl,
+            'callback_method' => $callbackMethod,
+            'callerData' => $callerData,
+        ];
+
+        $response = $this->connector->connecting($url, $params, 'DELETE');
+
+        // @codingStandardsIgnoreStart
+        if (isset($response->task_id)) {
+            return $response->task_id;
+            // @codingStandardsIgnoreEnd
+        }
+
+        return $response;
+    }
+
+    /**
      * Get backup URL.
      *
      * @param string $backupId Backup ID.
