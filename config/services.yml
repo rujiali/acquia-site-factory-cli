@@ -10,6 +10,8 @@ services:
       - [add, ['@asfc.DeleteBackupCommand']]
       - [add, ['@asfc.GetLatestBackupURLCommand']]
       - [add, ['@asfc.GetSiteDetailsCommand']]
+      - [add, ['@asfc.SendNotificationCommand']]
+      - [add, ['@asfc.ProcessModificationCommand']]
 
   asfc.ClearCacheCommand:
     class: AppBundle\Commands\ClearCacheCommand
