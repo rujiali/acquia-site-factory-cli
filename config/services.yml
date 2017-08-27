@@ -47,6 +47,10 @@ services:
     class: AppBundle\Commands\SendNotificationCommand
     arguments: ['@asfc.connectorThemes']
 
+  asfc.ProcessModificationCommand:
+    class: AppBundle\Commands\ProcessModificationCommand
+    arguments: ['@asfc.connectorThemes']
+
   asfc.connector:
     class: AppBundle\Connector\Connector
     arguments: ['@guzzle']

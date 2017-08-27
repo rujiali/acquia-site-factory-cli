@@ -35,6 +35,8 @@ in ```sitefactory.yml``` file
 ```./bin/AcquiaSiteFactoryCli app:deleteBackup {backup ID} {callback URL} {callback method} {caller data}```
 ### Send theme notification
 ```./bin/AcquiaSiteFactoryCli app:sendThemeNotification {scope} {event} {nid} {theme} {timestamp} {uid}```
+### Process theme modification
+```./bin/AcquiaSiteFactoryCli app:processModification {sitegroup_id}```
 
 ## To do
 :beer:Add commands to cover the rest of the endpoints in [Acquia site factory API reference](https://www.demo.acquia-cc.com/api/v1) 

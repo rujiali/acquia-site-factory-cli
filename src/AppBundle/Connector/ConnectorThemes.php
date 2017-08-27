@@ -39,7 +39,10 @@ class ConnectorThemes
      */
     public function sendNotification($scope, $event, $nid = null, $theme = null, $timestamp = null, $uid = null)
     {
-        $url = $this->connector->getURL().self::VERSION.'notification';
+        if ($this->connector->getURL() === null) {
+            return 'Cannot find site URL from configuration.';
+        }
+        $url = $this->connector->getURL().self::VERSION.'/notification';
         $params = [
             'scope' => $scope,
             'event' => $event,
@@ -50,7 +53,31 @@ class ConnectorThemes
         ];
         $response = $this->connector->connecting($url, $params, 'POST');
         if (isset($response->notification)) {
-            return $response->notification;
+            return $response->message;
+        }
+
+        return $response;
+    }
+
+    /**
+     * Process theme modification.
+     *
+     * @param string $siteGroupId Site group ID.
+     *
+     * @return mixed|string
+     */
+    public function processModification($siteGroupId = null)
+    {
+        if ($this->connector->getURL() === null) {
+            return 'Cannot find site URL from configuration.';
+        }
+        $url = $this->connector->getURL().self::VERSION.'/process';
+        $params = [
+          'sitegroup_id' => $siteGroupId,
+        ];
+        $response = $this->connector->connecting($url, $params, 'POST');
+        if (isset($response->sitegroups)) {
+            return $response->message;
         }
 
         return $response;

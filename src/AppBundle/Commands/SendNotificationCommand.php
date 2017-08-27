@@ -57,7 +57,7 @@ class SendNotificationCommand extends Command
         $theme = $input->getArgument('theme');
         $timestimp = $input->getArgument('timestamp');
         $uid = $input->getArgument('uid');
-        $taskId = $this->connectorThemes->sendNotification($scope, $event, $nid, $theme, $timestimp, $uid);
-        $output->writeln($taskId);
+        $message = $this->connectorThemes->sendNotification($scope, $event, $nid, $theme, $timestimp, $uid);
+        $output->writeln($message);
     }
 }

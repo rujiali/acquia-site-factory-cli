@@ -43,7 +43,7 @@ class Connector
      * @var array
      *   Configurations array.
      */
-    protected $config = NULL;
+    protected $config = null;
 
     /**
      * @var string.
@@ -87,8 +87,8 @@ class Connector
      */
     public function connecting($url, $params, $method)
     {
-        if ($this->config == NULL) {
-            return NULL;
+        if ($this->config === null) {
+            return null;
         }
         try {
             $result = $this->client->request(
@@ -125,7 +125,7 @@ class Connector
         try {
             return $this->siteId;
         } catch (\Exception $e) {
-            return NULL;
+            return null;
         }
     }
 
@@ -139,7 +139,7 @@ class Connector
         try {
             return $this->url;
         } catch (\Exception $e) {
-            return NULL;
+            return null;
         }
     }
 
@@ -150,7 +150,7 @@ class Connector
      */
     public function ping()
     {
-        if ($this->getURL() == NULL) {
+        if ($this->getURL() === null) {
             return 'Cannot find site URL from configuration.';
         }
         $url = $this->getURL().'/api/v1/ping';

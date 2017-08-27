@@ -11,7 +11,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\RequestException;
 use PHPUnit\Framework\TestCase;
 
-class SendNotificationTest extends TestCase
+class ProcessModificationTest extends TestCase
 {
 
     protected $root;
@@ -27,11 +27,11 @@ class SendNotificationTest extends TestCase
         if (!file_exists($this->root.'/sitefacotry.yml')) {
             copy($this->root.'/sitefactory.default.yml', $this->root.'/sitefactory.yml');
         }
-        $this->successBody = file_get_contents(__DIR__.'/Mocks/sendNotificationSuccess.json');
+        $this->successBody = file_get_contents(__DIR__.'/Mocks/processModificationSuccess.json');
         $this->failBody = file_get_contents(__DIR__.'/Mocks/pingFail.json');
     }
 
-    public function testSendSuccess()
+    public function testProcessSuccess()
     {
         $mock = new MockHandler(
             [
@@ -44,10 +44,10 @@ class SendNotificationTest extends TestCase
         $connector = new Connector($client);
         $connectorThemes = new ConnectorThemes($connector);
 
-        $this->assertTrue($connectorThemes->sendNotification('site', 'modify') === 'The site.modify notification has been received.');
+        $this->assertTrue($connectorThemes->processModification() === 'The request to process theme notification has been accepted.');
     }
 
-    public function testSendNotificationFail()
+    public function testProcessFail()
     {
         $mock = new MockHandler(
             [
@@ -60,7 +60,7 @@ class SendNotificationTest extends TestCase
         $connector = new Connector($client);
         $connectorThemes = new ConnectorThemes($connector);
 
-        $this->assertTrue($connectorThemes->sendNotification('site', 'modify') === 'Access denied');
+        $this->assertTrue($connectorThemes->processModification() === 'Access denied');
     }
 
     public function tearDown()
