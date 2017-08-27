@@ -43,6 +43,10 @@ services:
     class: AppBundle\Commands\GetSiteDetailsCommand
     arguments: ['@asfc.connectorSites']
 
+  asfc.SendNotificationCommand:
+    class: AppBundle\Commands\SendNotificationCommand
+    arguments: ['@asfc.connectorThemes']
+
   asfc.connector:
     class: AppBundle\Connector\Connector
     arguments: ['@guzzle']

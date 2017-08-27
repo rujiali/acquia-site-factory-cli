@@ -2,14 +2,16 @@
 namespace tests;
 
 use AppBundle\Connector\Connector;
-use AppBundle\Connector\ConnectorSites;
+use AppBundle\Connector\ConnectorThemes;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Exception\RequestException;
 use PHPUnit\Framework\TestCase;
 
-class ListSitesTest extends TestCase
+class SendNotificationTest extends TestCase
 {
 
     protected $root;
@@ -25,11 +27,11 @@ class ListSitesTest extends TestCase
         if (!file_exists($this->root.'/sitefacotry.yml')) {
             copy($this->root.'/sitefactory.default.yml', $this->root.'/sitefactory.yml');
         }
-        $this->successBody = file_get_contents(__DIR__.'/Mocks/listSitesSuccess.json');
+        $this->successBody = file_get_contents(__DIR__.'/Mocks/SendNotificationSuccess.json');
         $this->failBody = file_get_contents(__DIR__.'/Mocks/pingFail.json');
     }
 
-    public function testSitesSuccess()
+    public function testSendSuccess()
     {
         $mock = new MockHandler(
             [
@@ -38,14 +40,14 @@ class ListSitesTest extends TestCase
         );
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
+
         $connector = new Connector($client);
+        $connectorThemes = new ConnectorThemes($connector);
 
-        $connectorSites = new ConnectorSites($connector);
-
-        $this->assertTrue(is_array($connectorSites->listSites(NULL, NULL)));
+        $this->assertTrue(isset($connectorThemes->sendNotification('site', 'modify')->scope));
     }
 
-    public function testSitesFail()
+    public function testBackupsFail()
     {
         $mock = new MockHandler(
             [
@@ -54,11 +56,11 @@ class ListSitesTest extends TestCase
         );
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
+
         $connector = new Connector($client);
+        $connectorThemes = new ConnectorThemes($connector);
 
-        $connectorSites = new ConnectorSites($connector);
-
-        $this->assertTrue($connectorSites->listSites(NULL, NULL) === 'Access denied');
+        $this->assertTrue($connectorThemes->sendNotification('site', 'modify') === 'Access denied');
     }
 
     public function tearDown()
