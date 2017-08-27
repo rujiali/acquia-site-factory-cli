@@ -27,7 +27,7 @@ class SendNotificationTest extends TestCase
         if (!file_exists($this->root.'/sitefacotry.yml')) {
             copy($this->root.'/sitefactory.default.yml', $this->root.'/sitefactory.yml');
         }
-        $this->successBody = file_get_contents(__DIR__.'/Mocks/SendNotificationSuccess.json');
+        $this->successBody = file_get_contents(__DIR__.'/Mocks/sendNotificationSuccess.json');
         $this->failBody = file_get_contents(__DIR__.'/Mocks/pingFail.json');
     }
 
@@ -47,7 +47,7 @@ class SendNotificationTest extends TestCase
         $this->assertTrue(isset($connectorThemes->sendNotification('site', 'modify')->scope));
     }
 
-    public function testBackupsFail()
+    public function testSendNotificationFail()
     {
         $mock = new MockHandler(
             [
