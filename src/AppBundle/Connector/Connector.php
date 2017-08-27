@@ -43,7 +43,7 @@ class Connector
      * @var array
      *   Configurations array.
      */
-    protected $config;
+    protected $config = null;
 
     /**
      * @var string.
@@ -67,11 +67,13 @@ class Connector
         $parser = new Parser();
         $this->root = $root;
 
-        $this->config = $parser->parse(file_get_contents($root.'sitefactory.yml'));
-        $this->username = $this->config['username'];
-        $this->password = $this->config['apikey'];
-        $this->url = $this->config['url'];
-        $this->siteId = $this->config['site_id'];
+        if (file_exists($root.'sitefactory.yml')) {
+            $this->config = $parser->parse(file_get_contents($root.'sitefactory.yml'));
+            $this->username = $this->config['username'];
+            $this->password = $this->config['apikey'];
+            $this->url = $this->config['url'];
+            $this->siteId = $this->config['site_id'];
+        }
     }
 
     /**
@@ -85,6 +87,9 @@ class Connector
      */
     public function connecting($url, $params, $method)
     {
+        if ($this->config === null) {
+            return null;
+        }
         try {
             $result = $this->client->request(
                 $method,
@@ -117,7 +122,11 @@ class Connector
      */
     public function getSiteID()
     {
-        return $this->siteId;
+        try {
+            return $this->siteId;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     /**
@@ -127,7 +136,11 @@ class Connector
      */
     public function getURL()
     {
-        return $this->url;
+        try {
+            return $this->url;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     /**
@@ -137,6 +150,9 @@ class Connector
      */
     public function ping()
     {
+        if ($this->getURL() === null) {
+            return 'Cannot find site URL from configuration.';
+        }
         $url = $this->getURL().'/api/v1/ping';
         $params = [];
         $response = $this->connecting($url, $params, 'GET');

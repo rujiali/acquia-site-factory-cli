@@ -1,0 +1,9 @@
+{
+  "message": "The site.modify notification has been received.",
+  "time": "2014-02-16T20:04:12-06:00",
+  "notification": {
+    "scope": "site",
+    "event": "modify",
+    "nid": 123
+  }
+}

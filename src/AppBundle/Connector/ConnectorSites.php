@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- *   Connector file.
+ *   Connector site api file.
  */
 namespace AppBundle\Connector;
 
@@ -12,6 +12,8 @@ use AppBundle\Connector\Connector;
  */
 class ConnectorSites
 {
+    const VERSION = '/api/v1/sites/';
+
     protected $connector;
 
     /**
@@ -31,7 +33,10 @@ class ConnectorSites
      */
     public function clearCache()
     {
-        $url = $this->connector->getURL().'/api/v1/sites/'.$this->connector->getSiteID().'/cache-clear';
+        if ($this->connector->getURL() === null) {
+            return 'Cannot find site URL from configuration.';
+        }
+        $url = $this->connector->getURL().self::VERSION.$this->connector->getSiteID().'/cache-clear';
         $params = [];
         $response = $this->connector->connecting($url, $params, 'POST');
 
@@ -48,7 +53,10 @@ class ConnectorSites
      */
     public function createBackup($label)
     {
-        $url = $this->connector->getURL().'/api/v1/sites/'.$this->connector->getSiteID().'/backup';
+        if ($this->connector->getURL() === null) {
+            return 'Cannot find site URL from configuration.';
+        }
+        $url = $this->connector->getURL().self::VERSION.$this->connector->getSiteID().'/backup';
         $params = [
             'label' => $label,
         ];
@@ -76,7 +84,10 @@ class ConnectorSites
      */
     public function deleteBackup($backupId, $callbackUrl, $callbackMethod, $callerData)
     {
-        $url = $this->connector->getURL().'/api/v1/sites/'.$this->connector->getSiteID().'/backups/'.$backupId;
+        if ($this->connector->getURL() === null) {
+            return 'Cannot find site URL from configuration.';
+        }
+        $url = $this->connector->getURL().self::VERSION.$this->connector->getSiteID().'/backups/'.$backupId;
         $params = [
             'callback_url' => $callbackUrl,
             'callback_method' => $callbackMethod,
@@ -103,7 +114,10 @@ class ConnectorSites
      */
     public function getBackupURL($backupId)
     {
-        $url = $this->connector->getURL().'/api/v1/sites/'.$this->connector->getSiteID().'/backups/'.$backupId.'/url';
+        if ($this->connector->getURL() === null) {
+            return 'Cannot find site URL from configuration.';
+        }
+        $url = $this->connector->getURL().self::VERSION.$this->connector->getSiteID().'/backups/'.$backupId.'/url';
         $params = [];
         $response = $this->connector->connecting($url, $params, 'GET');
         if (isset($response->url)) {
@@ -144,7 +158,10 @@ class ConnectorSites
      */
     public function getSiteDetails($siteId)
     {
-        $url = $this->connector->getURL().'/api/v1/sites/'.$siteId;
+        if ($this->connector->getURL() === null) {
+            return 'Cannot find site URL from configuration.';
+        }
+        $url = $this->connector->getURL().self::VERSION.$siteId;
         $params = [];
         $response = $this->connector->connecting($url, $params, 'GET');
 
@@ -158,7 +175,10 @@ class ConnectorSites
      */
     public function listBackups()
     {
-        $url = $this->connector->getURL().'/api/v1/sites/'.$this->connector->getSiteID().'/backups';
+        if ($this->connector->getURL() === null) {
+            return 'Cannot find site URL from configuration.';
+        }
+        $url = $this->connector->getURL().self::VERSION.$this->connector->getSiteID().'/backups';
         $params = [];
         $response = $this->connector->connecting($url, $params, 'GET');
 
@@ -180,12 +200,15 @@ class ConnectorSites
      */
     public function listSites($limit, $page, $canary = false)
     {
+        if ($this->connector->getURL() === null) {
+            return 'Cannot find site URL from configuration.';
+        }
         $params = [
           'limit' => $limit,
           'page' => $page,
           'canary' => $canary,
         ];
-        $url = $this->connector->getURL().'/api/v1/sites';
+        $url = $this->connector->getURL().self::VERSION;
 
         $response = $this->connector->connecting($url, $params, 'GET');
 

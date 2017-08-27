@@ -24,7 +24,9 @@ class CreateBackupTest extends TestCase
     {
         parent::setUp();
         $this->root = __DIR__.'/../';
-        copy($this->root.'/sitefactory.default.yml', $this->root.'/sitefactory.yml');
+        if (!file_exists($this->root.'/sitefacotry.yml')) {
+            copy($this->root.'/sitefactory.default.yml', $this->root.'/sitefactory.yml');
+        }
         $this->successBody = file_get_contents(__DIR__.'/Mocks/createSuccess.json');
         $this->failBody = file_get_contents(__DIR__.'/Mocks/pingFail.json');
     }
