@@ -61,6 +61,10 @@ services:
     class: AppBundle\Connector\ConnectorSites
     arguments: ['@asfc.connector']
 
+  asfc.connectorThemes:
+    class: AppBundle\Connector\ConnectorThemes
+    arguments: ['@asfc.connector']
+
   symfony.console_output:
     class: Symfony\Component\Console\Output\ConsoleOutput
     public: true
