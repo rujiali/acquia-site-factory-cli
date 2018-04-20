@@ -44,7 +44,7 @@ class CreateBackupTest extends TestCase
         $connector = new Connector($client);
         $connectorSites = new ConnectorSites($connector);
 
-        $this->assertTrue(is_numeric($connectorSites->createBackup('autobackup')));
+        $this->assertTrue(is_numeric($connectorSites->createBackup('autobackup', ['themes', 'database'])));
     }
 
     public function testCreateBackupFail()
@@ -60,7 +60,7 @@ class CreateBackupTest extends TestCase
         $connector = new Connector($client);
         $connectorSites = new ConnectorSites($connector);
 
-        $this->assertTrue($connectorSites->createBackup('autobackup') === 'Access denied');
+        $this->assertTrue($connectorSites->createBackup('autobackup', ['themes', 'database']) === 'Access denied');
     }
 
     public function tearDown()

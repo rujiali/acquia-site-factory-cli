@@ -99,7 +99,7 @@ class Connector
                   $this->username,
                   $this->password,
                 ],
-                'query' => $params,
+                'form_params' => $params,
                 ]
             );
 
