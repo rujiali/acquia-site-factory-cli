@@ -26,7 +26,7 @@ in ```sitefactory.yml``` file
 ### Get site details
 ```bin/AcquiaSiteFactoryCli app:getSiteDetails {site ID}```
 ### Create Backup
-```./bin/AcquiaSiteFactoryCli app:createBackup```
+```./bin/AcquiaSiteFactoryCli app:createBackup {backup label} {parameters (themes, database etc)}```
 ### Show latest backup URL
 ```./bin/AcquiaSiteFactoryCli app:getLatestBackupURL```
 ### Clear site cache
