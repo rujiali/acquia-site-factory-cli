@@ -37,7 +37,8 @@ class CreateBackupCommand extends Command
         $this
             ->setName('app:createBackup')
             ->setDescription('Command to create backup for specific site in site factory')
-            ->addArgument('label', InputArgument::OPTIONAL, 'Backup Label');
+            ->addArgument('label', InputArgument::OPTIONAL, 'Backup Label')
+            ->addArgument('components', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'The components you want to put in backup (separate multiple names with a space)');
     }
 
     /**
@@ -49,7 +50,13 @@ class CreateBackupCommand extends Command
         if (!$label) {
             $label = 'Auto backup.';
         }
-        $taskId = $this->connectorSites->createBackup($label);
+
+        $components = $input->getArgument('components');
+        if (!$components) {
+            $components = [];
+        }
+
+        $taskId = $this->connectorSites->createBackup($label, $components);
         $output->writeln($taskId);
     }
 }

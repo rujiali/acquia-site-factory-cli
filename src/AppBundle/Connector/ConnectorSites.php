@@ -46,12 +46,13 @@ class ConnectorSites
     /**
      * Create backup for specific site in site factory.
      *
-     * @param string $label Backup label.
+     * @param string $label      Backup label.
+     * @param array  $components Backup components.
      *
      * @return integer
      *   Task ID.
      */
-    public function createBackup($label)
+    public function createBackup($label, $components)
     {
         if ($this->connector->getURL() === null) {
             return 'Cannot find site URL from configuration.';
@@ -59,6 +60,7 @@ class ConnectorSites
         $url = $this->connector->getURL().self::VERSION.$this->connector->getSiteID().'/backup';
         $params = [
             'label' => $label,
+            'components' => $components,
         ];
 
         $response = $this->connector->connecting($url, $params, 'POST');
