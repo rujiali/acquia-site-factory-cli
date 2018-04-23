@@ -192,6 +192,27 @@ class ConnectorSites
     }
 
     /**
+     * Get the last backup timestamp.
+     *
+     * @return mixed|string
+     */
+    public function getLastBackupTime()
+    {
+        $backups = $this->listBackups();
+        if (is_array($backups)) {
+            if (!empty($backups)) {
+                $timestamp = $backups[0]->timestamp;
+
+                return $timestamp;
+            }
+
+            return 'There is no backup available.';
+        }
+
+        return $backups;
+    }
+
+    /**
      * List sites.
      *
      * @param int     $limit  Limit number.
