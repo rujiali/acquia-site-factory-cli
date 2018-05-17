@@ -213,6 +213,45 @@ class ConnectorSites
     }
 
     /**
+     * Indicate when required backup is generated.
+     *
+     * @param string $label Backup label.
+     *
+     * @return bool
+     */
+    public function backupSuccessIndicator($label)
+    {
+        $backups = $this->listBackups();
+        if (is_array($backups)) {
+            if (!empty($backups)) {
+                if ($backups[0]->label === $label) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
+        }
+    }
+
+    /**
+     * Wait for the backup is generated.
+     *
+     * @param string $label Backup label.
+     *
+     * @return bool
+     */
+    public function waitBackup($label)
+    {
+        while (!$this->backupSuccessIndicator($label)) {
+            sleep(60);
+        }
+
+        return true;
+    }
+
+    /**
      * List sites.
      *
      * @param int     $limit  Limit number.

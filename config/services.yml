@@ -10,6 +10,7 @@ services:
       - [add, ['@asfc.DeleteBackupCommand']]
       - [add, ['@asfc.GetLatestBackupURLCommand']]
       - [add, ['@asfc.GetLastBackupTimeCommand']]
+      - [add, ['@asfc.WaitBackupCommand']]
       - [add, ['@asfc.GetSiteDetailsCommand']]
       - [add, ['@asfc.SendNotificationCommand']]
       - [add, ['@asfc.ProcessModificationCommand']]
@@ -44,6 +45,10 @@ services:
 
   asfc.GetLastBackupTimeCommand:
     class: AppBundle\Commands\GetLastBackupTimeCommand
+    arguments: ['@asfc.connectorSites']
+
+  asfc.WaitBackupCommand:
+    class: AppBundle\Commands\WaitBackupCommand
     arguments: ['@asfc.connectorSites']
 
   asfc.GetSiteDetailsCommand:
